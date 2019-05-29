@@ -44,7 +44,7 @@ export const registerRoutes = (app: Application, pool: DatabasePoolType) => {
 
   // define a secure route handler for the login page that redirects to /guitars
   app.get('/login', oidc.ensureAuthenticated(), (req, res) => {
-    res.redirect('/api/v1/group');
+    res.redirect('/');
   });
 
   // define a route to handle logout
@@ -55,7 +55,7 @@ export const registerRoutes = (app: Application, pool: DatabasePoolType) => {
 
   // define a route handler for the default home page
   app.get('/', (req, res) => {
-    res.send('Hello world. (Maybe try /api/v1/group');
+    res.send('Hello world. (Maybe try /api/v1/group?)');
   });
 
 };
