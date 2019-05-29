@@ -1,22 +1,13 @@
 import { Application } from 'express';
 import { asyncResponse, AsyncResponseError } from '../middleware/asyncResponse';
 
-import pgPromise = require('pg-promise');
 import { DatabasePoolType, sql } from 'slonik';
 import { withDatabaseConnection } from '../middleware/withDatabaseConnection';
-import { isEmpty, isString } from 'lodash';
 import { UNPROCESSABLE_ENTITY } from 'http-status-codes';
+import { isNonEmptyString } from '../helpers/isNonEmptyString';
 
 export const registerRoutes = (app: Application, pool: DatabasePoolType) => {
   const oidc = app.locals.oidc;
-
-  const pgp = pgPromise();
-  const db = pgp({
-    database: process.env.PGDATABASE,
-    host: process.env.PGHOST,
-    port: parseInt(process.env.PGPORT || '', 10),
-    user: process.env.PGUSER,
-  });
 
   app.get('/api/v1/whoami', oidc.ensureAuthenticated(), asyncResponse((req, res) => {
     const user = req.userContext ? req.userContext.userinfo : null;
@@ -30,10 +21,6 @@ export const registerRoutes = (app: Application, pool: DatabasePoolType) => {
 
     return groups;
   })));
-
-  function isNonEmptyString(s: string) {
-    return isString(s) && !isEmpty(s);
-  }
 
   app.post('/api/v1/group', asyncResponse(withDatabaseConnection(pool, async (req, res, connection) => {
     if (!isNonEmptyString(req.body.groupId) ||
