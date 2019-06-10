@@ -25,7 +25,7 @@ export const registerRoutes = (app: Application, pool: DatabasePoolType) => {
   app.post('/api/v1/group', asyncResponse(withDatabaseConnection(pool, async (req, res, connection) => {
     if (!isNonEmptyString(req.body.groupId) ||
       !isNonEmptyString(req.body.brand)) {
-      throw new AsyncResponseError('Missing group ID _or_ brand', UNPROCESSABLE_ENTITY);
+      throw new AsyncResponseError('Missing group ID or brand', UNPROCESSABLE_ENTITY);
     }
     const id = await connection.oneFirst(
       sql`
