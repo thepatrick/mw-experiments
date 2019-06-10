@@ -1,5 +1,4 @@
 import { sql } from 'slonik';
-
 import { createDatabasePool } from '../db';
 
 const asyncMain: (fn: () => Promise<void>) => void = (fn) => {
